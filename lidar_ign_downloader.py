@@ -223,6 +223,7 @@ class LidarIgnDownloaderDialog(QDialog):
         self.list_button = QPushButton("1 - Lister les dalles")
         self.download_button = QPushButton("2 - Télécharger les données")
         self.auto_load_checkbox = QCheckBox("Charger les données après téléchargement")
+        self.auto_load_checkbox.setChecked(True)
         self.cancel_button = QPushButton("Annuler")
         self.cancel_button.setEnabled(False)
 
