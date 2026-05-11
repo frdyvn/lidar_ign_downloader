@@ -6,7 +6,7 @@ import urllib.request
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 
-from qgis.PyQt.QtCore import Qt, QObject, pyqtSignal
+from qgis.PyQt.QtCore import Qt, QObject, QSettings, pyqtSignal
 from qgis.PyQt.QtGui import QIcon, QColor
 from qgis.PyQt.QtWidgets import (
     QAction,
@@ -509,9 +509,20 @@ class LidarIgnDownloaderPlugin:
             self.iface.removePluginMenu("&LiDAR IGN Downloader", self.action)
             self.iface.removeToolBarIcon(self.action)
 
+    def load_settings(self):
+        s = QSettings()
+        self.dlg.output_edit.setText(s.value("lidar_ign_downloader/output_dir", ""))
+        self.dlg.workers_spinbox.setValue(int(s.value("lidar_ign_downloader/max_workers", 2)))
+
+    def save_settings(self):
+        s = QSettings()
+        s.setValue("lidar_ign_downloader/output_dir", self.dlg.output_edit.text().strip())
+        s.setValue("lidar_ign_downloader/max_workers", self.dlg.workers_spinbox.value())
+
     def run(self):
         self.dlg = LidarIgnDownloaderDialog(self, self.iface.mainWindow())
         self.update_extent_status()
+        self.load_settings()
 
         self.dlg.browse_button.clicked.connect(self.choose_output_dir)
         self.dlg.use_active_layer_button.clicked.connect(self.use_active_layer_extent)
@@ -918,9 +929,11 @@ class LidarIgnDownloaderPlugin:
             if reply != QMessageBox.Yes:
                 return
 
+        self.save_settings()
         self.dlg.progress_global.setValue(0)
+        workers = self.dlg.workers_spinbox.value()
         self.dlg.add_log(
-            f"Lancement du téléchargement en arrière-plan ({len(rows_to_download)} fichier(s), 2 flux)..."
+            f"Lancement du téléchargement en arrière-plan ({len(rows_to_download)} fichier(s), {workers} flux)..."
         )
         self.set_ui_busy(True)
 
