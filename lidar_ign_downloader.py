@@ -133,8 +133,9 @@ class RectangleMapTool(QgsMapToolEmitPoint):
 
 
 class LidarIgnDownloaderDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, plugin, parent=None):
         super().__init__(parent)
+        self.plugin = plugin
         self.setWindowTitle("Téléchargement LiDAR IGN")
         icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
         if os.path.exists(icon_path):
@@ -260,6 +261,23 @@ class LidarIgnDownloaderDialog(QDialog):
         self.log = QTextEdit()
         self.log.setReadOnly(True)
         root.addWidget(self.log)
+
+    def closeEvent(self, event):
+        if self.plugin.current_task is not None:
+            reply = QMessageBox.question(
+                self,
+                "Téléchargement en cours",
+                "Un téléchargement est en cours. Voulez-vous l'annuler et fermer ?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply == QMessageBox.Yes:
+                self.plugin.current_task.cancel()
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()
 
     def add_log(self, text):
         self.log.append(text)
@@ -492,7 +510,7 @@ class LidarIgnDownloaderPlugin:
             self.iface.removeToolBarIcon(self.action)
 
     def run(self):
-        self.dlg = LidarIgnDownloaderDialog(self.iface.mainWindow())
+        self.dlg = LidarIgnDownloaderDialog(self, self.iface.mainWindow())
         self.update_extent_status()
 
         self.dlg.browse_button.clicked.connect(self.choose_output_dir)
