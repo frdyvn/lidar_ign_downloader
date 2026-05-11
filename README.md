@@ -2,6 +2,8 @@
 
 Plugin QGIS pour télécharger les dalles LiDAR HD IGN et produits dérivés depuis la Géoplateforme nationale.
 
+![Aperçu du plugin](screenshot.png)
+
 ## Fonctionnalités
 
 - Sélection du produit : MNT, MNS, MNH ou nuage de points classifié
