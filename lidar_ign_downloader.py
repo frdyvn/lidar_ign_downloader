@@ -907,6 +907,17 @@ class LidarIgnDownloaderPlugin:
             QMessageBox.information(self.dlg, "Info", "Aucune dalle sélectionnée.")
             return
 
+        if len(rows_to_download) > 10:
+            reply = QMessageBox.question(
+                self.dlg,
+                "Volume important",
+                f"{len(rows_to_download)} dalles sélectionnées. Le téléchargement peut être long. Continuer ?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply != QMessageBox.Yes:
+                return
+
         self.dlg.progress_global.setValue(0)
         self.dlg.add_log(
             f"Lancement du téléchargement en arrière-plan ({len(rows_to_download)} fichier(s), 2 flux)..."
