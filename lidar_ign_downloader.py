@@ -50,10 +50,6 @@ from qgis.core import (
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand
 
 
-def classFactory(iface):
-    return LidarIgnDownloaderPlugin(iface)
-
-
 try:
     RUBBERBAND_GEOM_TYPE = QgsWkbTypes.PolygonGeometry
 except Exception:
