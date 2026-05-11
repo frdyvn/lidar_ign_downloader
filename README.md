@@ -30,6 +30,3 @@ Plugin QGIS pour télécharger les dalles LiDAR HD IGN et produits dérivés dep
 5. Cliquer **Lister les dalles** pour interroger l'IGN
 6. Sélectionner les dalles à télécharger et cliquer **Télécharger**
 
-## Auteur
-
-Frédérick YVONNE — [CEN Nouvelle-Aquitaine](https://www.cen-nouvelle-aquitaine.org)
