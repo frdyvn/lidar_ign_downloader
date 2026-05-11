@@ -2,11 +2,11 @@
 name=LiDAR IGN Downloader
 qgisMinimumVersion=3.28
 description=Télécharge les dalles LiDAR HD IGN et produits dérivés depuis la Géoplateforme
-version=0.1.0
+version=0.2.0
 author=Frédérick YVONNE
 email=f.yvonne@cen-na.org
 about=Plugin QGIS pour lister et télécharger les dalles LiDAR HD IGN (nuage, MNT, MNS, MNH) intersectant une emprise.
 category=Plugins
 icon=
-experimental=True
+experimental=False
 deprecated=False
