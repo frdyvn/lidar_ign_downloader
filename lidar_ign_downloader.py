@@ -24,6 +24,7 @@ from qgis.PyQt.QtWidgets import (
     QMessageBox,
     QCheckBox,
     QProgressBar,
+    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
     QHeaderView,
@@ -167,6 +168,12 @@ class LidarIgnDownloaderDialog(QDialog):
         out_layout.addWidget(self.output_edit)
         out_layout.addWidget(self.browse_button)
         params_form.addRow("Dossier de sortie", out_row)
+
+        self.workers_spinbox = QSpinBox()
+        self.workers_spinbox.setMinimum(1)
+        self.workers_spinbox.setMaximum(4)
+        self.workers_spinbox.setValue(2)
+        params_form.addRow("Téléchargements simultanés", self.workers_spinbox)
 
         left_layout.addWidget(params_group)
 
@@ -666,6 +673,7 @@ class LidarIgnDownloaderPlugin:
             self.dlg.list_button,
             self.dlg.download_button,
             self.dlg.auto_load_checkbox,
+            self.dlg.workers_spinbox,
         ):
             w.setEnabled(not busy)
         self.dlg.cancel_button.setEnabled(busy)
@@ -895,7 +903,7 @@ class LidarIgnDownloaderPlugin:
             rows_to_download=rows_to_download,
             out_dir=out_dir,
             signals=self.current_signals,
-            max_workers=2,
+            max_workers=self.dlg.workers_spinbox.value(),
         )
         self.current_task.taskCompleted.connect(self.on_task_completed)
         self.current_task.taskTerminated.connect(self.on_task_terminated)
